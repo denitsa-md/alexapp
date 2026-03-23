@@ -96,13 +96,11 @@
       backdrop-filter: blur(20px);
       border-radius: 18px;
       border: 2px solid rgba(255,255,255,0.3);
-      padding: 8px 20px 10px;
-      text-align: center;
+      padding: 8px 8px 8px 20px;
       flex-shrink: 0;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
+      align-items: stretch;
+      gap: 12px;
     }
 
     .question-label {
@@ -126,7 +124,9 @@
     .letter-display:active { transform: scale(0.95); }
 
     .question-right {
-      text-align: left;
+      flex: 1;
+      display: flex;
+      align-items: center;
     }
 
     .question-text {
@@ -136,17 +136,22 @@
     }
 
     .hint-btn {
-      margin-top: 8px;
       background: rgba(255,255,255,0.2);
       border: 2px solid rgba(255,255,255,0.4);
-      border-radius: 50px;
+      border-radius: 12px;
       color: white;
-      padding: 9px 20px;
+      padding: 0 16px;
       font-size: 1rem;
       cursor: pointer;
       transition: background 0.2s;
-      display: inline-block;
-      min-height: 42px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      align-self: stretch;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .hint-btn:hover { background: rgba(255,255,255,0.35); }
@@ -166,7 +171,7 @@
       .question-card { gap: 8px; padding: 6px 12px; }
       .letter-display { font-size: 4rem; }
       .question-text { font-size: 0.85rem; }
-      .hint-btn      { font-size: 0.9rem; padding: 7px 16px; min-height: 38px; }
+      .hint-btn      { font-size: 0.8rem; padding: 0 12px; }
       .choice-btn    { gap: 6px; padding: 12px 6px 8px; border-radius: 14px; }
       .choice-emoji  { font-size: 2.2rem; }
       .choice-name   { font-size: 0.8rem; }
@@ -418,8 +423,8 @@
     <div class="letter-display" id="letterDisplay" title="Tryk for at høre bogstavet">A</div>
     <div class="question-right">
       <div class="question-text" id="questionText">Hvilken starter med "A"?</div>
-      <button class="hint-btn" id="hintBtn" onclick="playLetter()">🔊 Hør bogstavet</button>
     </div>
+    <button class="hint-btn" id="hintBtn" onclick="playLetter()">🔊<br>Hør</button>
   </div>
 
   <div class="choices" id="choices"></div>
