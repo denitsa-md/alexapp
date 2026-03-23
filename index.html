@@ -62,7 +62,9 @@
       align-items: center;
       justify-content: space-between;
       flex-shrink: 0;
-      gap: 10px;
+      gap: 8px;
+      width: 100%;
+      overflow: hidden;
     }
 
     header h1 {
@@ -413,8 +415,7 @@
     <h1>🌟 Alexandras Alfabet 🌟</h1>
     <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
       <div class="score-bar">
-        <div class="score-chip">⭐ Point: <span id="score">0</span></div>
-        <div class="score-chip">🔥 Streak: <span id="streak">0</span></div>
+        <div class="score-chip">⭐ <span id="score">0</span> point</div>
       </div>
       <div class="theme-picker" id="themePicker"></div>
     </div>
@@ -448,14 +449,14 @@
     { name: "Citron",      emoji: "🍋", letter: "C", type: "frugt"  },
     { name: "Cockatoo",    emoji: "🦜", letter: "C", type: "dyr"    },
     // D
-    { name: "Dragefrugt",  emoji: "🐉", letter: "D", type: "frugt"  },
+    { name: "Dragefrugt",  emoji: "🌺", letter: "D", type: "frugt"  },
     { name: "Due",         emoji: "🕊️", letter: "D", type: "dyr"   },
     { name: "Delfin",      emoji: "🐬", letter: "D", type: "dyr"    },
     // E
     { name: "Elefant",     emoji: "🐘", letter: "E", type: "dyr"    },
     { name: "Egern",       emoji: "🐿️", letter: "E", type: "dyr"   },
     // F
-    { name: "Figen",       emoji: "🍐", letter: "F", type: "frugt"  },
+    { name: "Fersken",     emoji: "🍑", letter: "F", type: "frugt"  },
     { name: "Flamingo",    emoji: "🦩", letter: "F", type: "dyr"    },
     { name: "Frø",         emoji: "🐸", letter: "F", type: "dyr"    },
     // G
@@ -471,7 +472,7 @@
     { name: "Iguana",      emoji: "🦎", letter: "I", type: "dyr"    },
     // J
     { name: "Jackfrugt",   emoji: "🥭", letter: "J", type: "frugt"  },
-    { name: "Jaguar",      emoji: "🐱", letter: "J", type: "dyr"    },
+    { name: "Jaguar",      emoji: "🐆", letter: "J", type: "dyr"    },
     // K
     { name: "Kiwi",        emoji: "🥝", letter: "K", type: "frugt"  },
     { name: "Koala",       emoji: "🐨", letter: "K", type: "dyr"    },
@@ -497,17 +498,17 @@
     { name: "Pingvin",     emoji: "🐧", letter: "P", type: "dyr"    },
     { name: "Papegøje",    emoji: "🦜", letter: "P", type: "dyr"    },
     // R
-    { name: "Rambutan",    emoji: "🍑", letter: "R", type: "frugt"  },
+    { name: "Rambutan",    emoji: "🍓", letter: "R", type: "frugt"  },
     { name: "Reje",        emoji: "🦐", letter: "R", type: "dyr"    },
     { name: "Ræv",         emoji: "🦊", letter: "R", type: "dyr"    },
     // S
-    { name: "Stjernefrugt",emoji: "⭐", letter: "S", type: "frugt"  },
+    { name: "Stjernefrugt",emoji: "🌟", letter: "S", type: "frugt"  },
     { name: "Slange",      emoji: "🐍", letter: "S", type: "dyr"    },
     { name: "Sæl",         emoji: "🦭", letter: "S", type: "dyr"    },
     { name: "Sommerfugl",  emoji: "🦋", letter: "S", type: "dyr"    },
     // T
     { name: "Tiger",       emoji: "🐯", letter: "T", type: "dyr"    },
-    { name: "Tapir",       emoji: "🦏", letter: "T", type: "dyr"    },
+    { name: "Tapir",       emoji: "🐗", letter: "T", type: "dyr"    },
     { name: "Tudse",       emoji: "🐸", letter: "T", type: "dyr"    },
     // U
     { name: "Ugle",        emoji: "🦉", letter: "U", type: "dyr"    },
@@ -679,14 +680,12 @@
       score += 1 + Math.min(streak, 4);
       streak++;
       document.getElementById('score').textContent = score;
-      document.getElementById('streak').textContent = streak;
       speak(item.name);
       showFeedback(true, item.name);
       launchConfetti();
     } else {
       btn.classList.add('wrong');
       streak = 0;
-      document.getElementById('streak').textContent = streak;
       speak(item.name);
       showFeedback(false, item.name);
       // Reveal correct
