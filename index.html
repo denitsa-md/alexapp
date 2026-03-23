@@ -107,7 +107,7 @@
     }
 
     .letter-display {
-      font-size: clamp(3.5rem, 10vw, 6rem);
+      font-size: clamp(4.5rem, 13vw, 7rem);
       font-weight: 900;
       color: #fff;
       text-shadow: 0 0 30px rgba(255,220,80,0.8), 3px 3px 0 rgba(0,0,0,0.15);
@@ -153,19 +153,21 @@
       gap: 10px;
       flex: 1;
       min-height: 0;
+      align-content: center;
     }
 
     /* Always keep 3 columns — never stack on mobile */
     @media (max-width: 480px) {
-      header h1     { font-size: 1rem; }
+      header h1      { font-size: 1rem; }
       .question-card { gap: 8px; padding: 6px 12px; }
-      .letter-display { font-size: 3rem; }
+      .letter-display { font-size: 4rem; }
       .question-text { font-size: 0.85rem; }
       .hint-btn      { font-size: 0.7rem; padding: 3px 10px; }
-      .choice-btn    { gap: 4px; padding: 8px 4px; border-radius: 14px; }
-      .choice-emoji  { font-size: 1.8rem; }
-      .choice-name   { font-size: 0.72rem; }
+      .choice-btn    { gap: 6px; padding: 12px 6px 8px; border-radius: 14px; }
+      .choice-emoji  { font-size: 2.2rem; }
+      .choice-name   { font-size: 0.8rem; }
       .choice-type   { display: none; }
+      .sound-btn     { font-size: 0.72rem; min-width: 56px; min-height: 30px; padding: 5px 10px; }
       .feedback-msg  { font-size: 0.9rem; }
       .next-btn      { font-size: 0.85rem; padding: 6px 16px; }
     }
@@ -174,7 +176,7 @@
       background: white;
       border: none;
       border-radius: 18px;
-      padding: 10px 8px;
+      padding: 14px 8px 10px;
       cursor: pointer;
       transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
       box-shadow: 0 6px 18px rgba(0,0,0,0.15);
@@ -182,10 +184,9 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 8px;
       position: relative;
       overflow: hidden;
-      height: 100%;
       width: 100%;
     }
 
@@ -240,15 +241,34 @@
       letter-spacing: 1px;
     }
 
-    .sound-icon {
-      position: absolute;
-      top: 8px; right: 8px;
-      font-size: 1rem;
-      opacity: 0.4;
-      transition: opacity 0.2s;
+    .sound-btn {
+      background: rgba(102,126,234,0.12);
+      border: none;
+      border-radius: 50px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      color: #667eea;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      min-width: 70px;
+      min-height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
     }
 
-    .choice-btn:hover .sound-icon { opacity: 0.9; }
+    .sound-btn:active { background: rgba(102,126,234,0.25); }
+
+    .choice-btn.correct .sound-btn { color: #2d6a0f; background: rgba(255,255,255,0.3); }
+    .choice-btn.wrong   .sound-btn { color: #7a1a1a; background: rgba(255,255,255,0.3); }
+
+    .first-letter {
+      color: #f7971e;
+      font-size: 1.3em;
+      font-weight: 900;
+    }
 
     .feedback {
       text-align: center;
@@ -542,13 +562,17 @@
     choices.forEach(item => {
       const btn = document.createElement('button');
       btn.className = 'choice-btn';
+      const highlightedName = `<span class="first-letter">${item.name[0]}</span>${item.name.slice(1)}`;
       btn.innerHTML = `
-        <span class="sound-icon">🔊</span>
         <span class="choice-emoji">${item.emoji}</span>
-        <span class="choice-name">${item.name}</span>
-        <span class="choice-type">${item.type}</span>
+        <span class="choice-name">${highlightedName}</span>
+        <button class="sound-btn" title="Hør ordet">🔊 Hør</button>
       `;
-      btn.addEventListener('mouseenter', () => speak(item.name));
+      // Sound button plays word, doesn't trigger answer
+      btn.querySelector('.sound-btn').addEventListener('click', e => {
+        e.stopPropagation();
+        speak(item.name);
+      });
       btn.addEventListener('click', () => handleAnswer(btn, item));
       container.appendChild(btn);
     });
