@@ -23,58 +23,58 @@ const RHYME_LANGS = {
     ],
     groups: [
       { id: 'at', label: '-at', words: [
-        { word: 'kat',  emoji: '🐱' },
-        { word: 'hat',  emoji: '🎩' },
-        { word: 'nat',  emoji: '🌙' },
+        { word: 'kat',  emoji: '🐱', wiki: 'Cat' },
+        { word: 'hat',  emoji: '🎩', wiki: 'Hat' },
+        { word: 'nat',  emoji: '🌙', wiki: 'Night' },
       ]},
       { id: 'us', label: '-us', words: [
-        { word: 'hus',  emoji: '🏠' },
-        { word: 'mus',  emoji: '🐭' },
-        { word: 'bus',  emoji: '🚌' },
+        { word: 'hus',  emoji: '🏠', wiki: 'House' },
+        { word: 'mus',  emoji: '🐭', wiki: 'House mouse' },
+        { word: 'bus',  emoji: '🚌', wiki: 'Bus' },
       ]},
       { id: 'il', label: '-il', words: [
-        { word: 'bil',  emoji: '🚗' },
-        { word: 'pil',  emoji: '🏹' },
-        { word: 'spil', emoji: '🎮' },
+        { word: 'bil',  emoji: '🚗', wiki: 'Automobile' },
+        { word: 'pil',  emoji: '🏹', wiki: 'Arrow' },
+        { word: 'spil', emoji: '🎮', wiki: 'Game' },
       ]},
       { id: 'and', label: '-and', words: [
-        { word: 'and',  emoji: '🦆' },
-        { word: 'sand', emoji: '🏖️' },
-        { word: 'land', emoji: '🌍' },
+        { word: 'and',  emoji: '🦆', wiki: 'Duck' },
+        { word: 'sand', emoji: '🏖️', wiki: 'Sand' },
+        { word: 'land', emoji: '🌍', wiki: 'Land' },
       ]},
       { id: 'ol', label: '-ol', words: [
-        { word: 'sol',  emoji: '☀️' },
-        { word: 'stol', emoji: '🪑' },
+        { word: 'sol',  emoji: '☀️', wiki: 'Sun' },
+        { word: 'stol', emoji: '🪑', wiki: 'Chair' },
       ]},
       { id: 'ag', label: '-ag', words: [
-        { word: 'dag',  emoji: '📅' },
-        { word: 'flag', emoji: '🚩' },
+        { word: 'dag',  emoji: '📅', wiki: 'Day' },
+        { word: 'flag', emoji: '🚩', wiki: 'Flag' },
       ]},
       { id: 'o', label: '-o', words: [
-        { word: 'ko',   emoji: '🐄' },
-        { word: 'so',   emoji: '🐷' },
+        { word: 'ko',   emoji: '🐄', wiki: 'Cattle' },
+        { word: 'so',   emoji: '🐷', wiki: 'Pig' },
       ]},
       { id: 'en', label: '-en', words: [
-        { word: 'sten', emoji: '🪨' },
-        { word: 'gren', emoji: '🌿' },
-        { word: 'ren',  emoji: '🦌' },
+        { word: 'sten', emoji: '🪨', wiki: 'Rock (geology)' },
+        { word: 'gren', emoji: '🌿', wiki: 'Branch' },
+        { word: 'ren',  emoji: '🦌', wiki: 'Reindeer' },
       ]},
       { id: 'ej', label: '-ej', words: [
-        { word: 'vej',  emoji: '🛣️' },
-        { word: 'hej',  emoji: '👋' },
+        { word: 'vej',  emoji: '🛣️', wiki: 'Road' },
+        { word: 'hej',  emoji: '👋', wiki: 'Greeting' },
       ]},
       { id: 'is', label: '-is', words: [
-        { word: 'gris', emoji: '🐷' },
-        { word: 'ris',  emoji: '🍚' },
-        { word: 'is',   emoji: '🍦' },
+        { word: 'gris', emoji: '🐷', wiki: 'Pig' },
+        { word: 'ris',  emoji: '🍚', wiki: 'Rice' },
+        { word: 'is',   emoji: '🍦', wiki: 'Ice cream' },
       ]},
       { id: 'orm', label: '-orm', words: [
-        { word: 'orm',   emoji: '🪱' },
-        { word: 'storm', emoji: '⛈️' },
+        { word: 'orm',   emoji: '🪱', wiki: 'Earthworm' },
+        { word: 'storm', emoji: '⛈️', wiki: 'Storm' },
       ]},
       { id: 'e', label: '-e', words: [
-        { word: 'sne',  emoji: '❄️' },
-        { word: 'ske',  emoji: '🥄' },
+        { word: 'sne',  emoji: '❄️', wiki: 'Snow' },
+        { word: 'ske',  emoji: '🥄', wiki: 'Spoon' },
       ]},
     ],
   },
@@ -103,54 +103,54 @@ const RHYME_LANGS = {
     ],
     groups: [
       { id: 'ак', label: '-ак', words: [
-        { word: 'мак',  emoji: '🌺' },
-        { word: 'рак',  emoji: '🦀' },
+        { word: 'мак',  emoji: '🌺', wiki: 'Poppy' },
+        { word: 'рак',  emoji: '🦀', wiki: 'Crab' },
       ]},
       { id: 'ед', label: '-ед', words: [
-        { word: 'мед',  emoji: '🍯' },
-        { word: 'лед',  emoji: '❄️' },
+        { word: 'мед',  emoji: '🍯', wiki: 'Honey' },
+        { word: 'лед',  emoji: '❄️', wiki: 'Ice' },
       ]},
       { id: 'он', label: '-он', words: [
-        { word: 'кон',   emoji: '🐴' },
-        { word: 'слон',  emoji: '🐘' },
-        { word: 'лимон', emoji: '🍋' },
+        { word: 'кон',   emoji: '🐴', wiki: 'Horse' },
+        { word: 'слон',  emoji: '🐘', wiki: 'Asian elephant' },
+        { word: 'лимон', emoji: '🍋', wiki: 'Lemon' },
       ]},
       { id: 'отка', label: '-отка', words: [
-        { word: 'котка', emoji: '🐱' },
-        { word: 'лодка', emoji: '⛵' },
+        { word: 'котка', emoji: '🐱', wiki: 'Cat' },
+        { word: 'лодка', emoji: '⛵', wiki: 'Boat' },
       ]},
       { id: 'ишка', label: '-ишка', words: [
-        { word: 'мишка',  emoji: '🐭' },
-        { word: 'книжка', emoji: '📚' },
+        { word: 'мишка',  emoji: '🐭', wiki: 'House mouse' },
+        { word: 'книжка', emoji: '📚', wiki: 'Book' },
       ]},
       { id: 'ук', label: '-ук', words: [
-        { word: 'лук',  emoji: '🧅' },
-        { word: 'жук',  emoji: '🐛' },
+        { word: 'лук',  emoji: '🧅', wiki: 'Onion' },
+        { word: 'жук',  emoji: '🐛', wiki: 'Beetle' },
       ]},
       { id: 'ла', label: '-ла', words: [
-        { word: 'игла',  emoji: '🪡' },
-        { word: 'скала', emoji: '🪨' },
-        { word: 'пчела', emoji: '🐝' },
+        { word: 'игла',  emoji: '🪡', wiki: 'Sewing needle' },
+        { word: 'скала', emoji: '🪨', wiki: 'Rock (geology)' },
+        { word: 'пчела', emoji: '🐝', wiki: 'Honey bee' },
       ]},
       { id: 'оза', label: '-оза', words: [
-        { word: 'роза', emoji: '🌹' },
-        { word: 'коза', emoji: '🐐' },
+        { word: 'роза', emoji: '🌹', wiki: 'Rose' },
+        { word: 'коза', emoji: '🐐', wiki: 'Goat' },
       ]},
       { id: 'аба', label: '-аба', words: [
-        { word: 'жаба', emoji: '🐸' },
-        { word: 'баба', emoji: '👵' },
+        { word: 'жаба', emoji: '🐸', wiki: 'Frog' },
+        { word: 'баба', emoji: '👵', wiki: 'Old age' },
       ]},
       { id: 'га', label: '-га', words: [
-        { word: 'дъга',  emoji: '🌈' },
-        { word: 'книга', emoji: '📖' },
+        { word: 'дъга',  emoji: '🌈', wiki: 'Rainbow' },
+        { word: 'книга', emoji: '📖', wiki: 'Book' },
       ]},
       { id: 'ок', label: '-ок', words: [
-        { word: 'сок',  emoji: '🥤' },
-        { word: 'ток',  emoji: '⚡' },
+        { word: 'сок',  emoji: '🥤', wiki: 'Juice' },
+        { word: 'ток',  emoji: '⚡', wiki: 'Electric current' },
       ]},
       { id: 'са', label: '-са', words: [
-        { word: 'роса', emoji: '💧' },
-        { word: 'лиса', emoji: '🦊' },
+        { word: 'роса', emoji: '💧', wiki: 'Dew' },
+        { word: 'лиса', emoji: '🦊', wiki: 'Red fox' },
       ]},
     ],
   },
@@ -265,6 +265,23 @@ function newRound() {
   setTimeout(() => speak(questionWord.word), 400);
 }
 
+// ── Wikipedia image loading ───────────────────────────────────────────────────
+
+const imgCache = {};
+
+async function fetchWikiImage(title) {
+  if (imgCache[title] !== undefined) return imgCache[title];
+  imgCache[title] = null;
+  try {
+    const url = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(title)}&prop=pageimages&format=json&pithumbsize=300&origin=*`;
+    const res  = await fetch(url);
+    const data = await res.json();
+    const page = Object.values(data.query.pages)[0];
+    imgCache[title] = page.thumbnail?.source || null;
+  } catch { imgCache[title] = null; }
+  return imgCache[title];
+}
+
 // ── Render choices ────────────────────────────────────────────────────────────
 
 function renderChoices(choices) {
@@ -278,7 +295,7 @@ function renderChoices(choices) {
     const btn = document.createElement('button');
     btn.className = 'choice-btn';
     btn.innerHTML = `
-      <span style="font-size:clamp(2.5rem,9vw,4rem);line-height:1">${item.emoji}</span>
+      <div class="choice-media loading"></div>
       <span class="choice-name">${item.word}</span>
     `;
     btn.addEventListener('click', () => handleAnswer(wrapper, item));
@@ -291,6 +308,22 @@ function renderChoices(choices) {
     wrapper.appendChild(btn);
     wrapper.appendChild(soundBtn);
     container.appendChild(wrapper);
+
+    fetchWikiImage(item.wiki).then(src => {
+      const media = btn.querySelector('.choice-media');
+      if (!media) return;
+      media.classList.remove('loading');
+      if (src) {
+        const img = document.createElement('img');
+        img.className = 'choice-img';
+        img.alt = item.word;
+        img.onload  = () => media.appendChild(img);
+        img.onerror = () => { media.innerHTML = `<span class="choice-emoji">${item.emoji}</span>`; };
+        img.src = src;
+      } else {
+        media.innerHTML = `<span class="choice-emoji">${item.emoji}</span>`;
+      }
+    });
   });
 }
 
