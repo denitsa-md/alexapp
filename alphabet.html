@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alexandras Alfabet Eventyr 🌟</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="confetti-container" id="confetti"></div>
+<div class="milestone-overlay" id="milestone"></div>
+
+<div class="container">
+  <header>
+    <h1 id="appTitle">🌟 Alexandras Alfabet 🌟</h1>
+    <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+      <div class="score-bar">
+        <div class="score-chip">⭐ <span id="score">0</span> <span id="pointsLabel">point</span></div>
+        <div class="streak-stars" id="streakStars">☆☆☆☆☆</div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
+        <button class="lang-btn active" data-lang="da">🇩🇰</button>
+        <button class="lang-btn" data-lang="bg">🇧🇬</button>
+      </div>
+      <button class="theme-toggle-btn" id="themeToggle" title="Vælg farvetema">🎨</button>
+      <div class="theme-popup" id="themePicker"></div>
+      <a href="index.html" class="back-btn" title="Hjem">🏠</a>
+    </div>
+  </header>
+
+  <div class="question-card">
+    <div class="letter-display" id="letterDisplay" title="Tryk for at høre bogstavet">A</div>
+    <div class="question-right">
+      <div class="question-text" id="questionText">Hvilken starter med "A"?</div>
+    </div>
+    <button class="hint-btn" id="hintBtn" onclick="playLetter()">🔊<br>Hør</button>
+  </div>
+
+  <div class="choices" id="choices"></div>
+
+  <div class="feedback" id="feedback"></div>
+  <div class="alphabet-strip" id="alphabetStrip"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

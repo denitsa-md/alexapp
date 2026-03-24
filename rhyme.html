@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alexandras Rim 🎵</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .rhyme-question {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      flex-shrink: 0;
+      min-width: 90px;
+    }
+
+    .rhyme-q-emoji {
+      font-size: clamp(3rem, 10vw, 5rem);
+      line-height: 1;
+    }
+
+    .rhyme-q-word {
+      font-size: clamp(1.4rem, 4.5vw, 2.2rem);
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 0 24px rgba(255,220,80,0.8), 2px 2px 0 rgba(0,0,0,0.15);
+    }
+
+    .rhyme-strip {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 5px;
+      flex-shrink: 0;
+      padding: 4px 2px;
+    }
+
+    .rhyme-chip {
+      background: rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.65);
+      border-radius: 6px;
+      padding: 3px 7px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .rhyme-chip.done {
+      background: rgba(100,220,100,0.4);
+      color: white;
+      border-color: rgba(100,220,100,0.6);
+    }
+
+    .rhyme-chip.current {
+      background: rgba(255,220,80,0.8);
+      color: #333;
+      border-color: rgba(255,220,80,1);
+      transform: scale(1.15);
+    }
+
+    @media (max-width: 480px) {
+      .rhyme-chip { font-size: 0.65rem; padding: 2px 5px; }
+      .rhyme-question { min-width: 70px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="confetti-container" id="confetti"></div>
+<div class="milestone-overlay" id="milestone"></div>
+
+<div class="container">
+  <header>
+    <h1 id="appTitle">🎵 Alexandras Rim 🎵</h1>
+    <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+      <div class="score-bar">
+        <div class="score-chip">⭐ <span id="score">0</span> <span id="pointsLabel">point</span></div>
+        <div class="streak-stars" id="streakStars">☆☆☆☆☆</div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
+        <button class="lang-btn active" data-lang="da">🇩🇰</button>
+        <button class="lang-btn" data-lang="bg">🇧🇬</button>
+      </div>
+      <button class="theme-toggle-btn" id="themeToggle" title="Vælg farvetema">🎨</button>
+      <div class="theme-popup" id="themePicker"></div>
+      <a href="index.html" class="back-btn" title="Hjem">🏠</a>
+    </div>
+  </header>
+
+  <div class="question-card">
+    <div class="rhyme-question">
+      <span class="rhyme-q-emoji" id="questionEmoji">🐱</span>
+      <span class="rhyme-q-word"  id="questionWord">kat</span>
+    </div>
+    <div class="question-right">
+      <div class="question-text" id="questionText">Hvad rimer med "kat"?</div>
+    </div>
+    <button class="hint-btn" id="hintBtn">🔊<br>Hør</button>
+  </div>
+
+  <div class="choices" id="choices"></div>
+
+  <div class="feedback" id="feedback"></div>
+  <div class="rhyme-strip" id="rhymeStrip"></div>
+</div>
+
+<script src="rhyme.js"></script>
+</body>
+</html>

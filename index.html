@@ -3,46 +3,189 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alexandras Alfabet Eventyr 🌟</title>
+  <title>Alexandras Verden 🌟</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .launcher {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      gap: 32px;
+      padding: 20px;
+    }
+
+    .launcher h1 {
+      font-size: clamp(1.4rem, 5vw, 2.2rem);
+      color: #fff;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+      letter-spacing: 1px;
+      text-align: center;
+    }
+
+    .app-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .app-card {
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 24px;
+      padding: 32px 20px;
+      text-align: center;
+      cursor: pointer;
+      text-decoration: none;
+      color: white;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .app-card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      background: rgba(255,255,255,0.28);
+    }
+
+    .app-card:active { transform: scale(0.97); }
+
+    .app-icon  { font-size: clamp(3rem, 10vw, 5rem); line-height: 1; }
+    .app-title { font-size: clamp(1.1rem, 3vw, 1.5rem); font-weight: 800; }
+    .app-desc  { font-size: clamp(0.75rem, 2vw, 0.9rem); opacity: 0.85; line-height: 1.4; }
+
+    @media (max-width: 400px) {
+      .app-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
 
 <div class="stars" id="stars"></div>
-<div class="confetti-container" id="confetti"></div>
-<div class="milestone-overlay" id="milestone"></div>
 
 <div class="container">
-  <header>
-    <h1 id="appTitle">🌟 Alexandras Alfabet 🌟</h1>
-    <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
-      <div class="score-bar">
-        <div class="score-chip">⭐ <span id="score">0</span> <span id="pointsLabel">point</span></div>
-        <div class="streak-stars" id="streakStars">☆☆☆☆☆</div>
-      </div>
-      <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
-        <button class="lang-btn active" data-lang="da">🇩🇰</button>
-        <button class="lang-btn" data-lang="bg">🇧🇬</button>
-      </div>
-      <button class="theme-toggle-btn" id="themeToggle" title="Vælg farvetema">🎨</button>
+  <div class="launcher">
+    <h1 id="launcherTitle">🌟 Alexandras Verden 🌟</h1>
+
+    <div class="app-grid">
+      <a class="app-card" href="alphabet.html">
+        <div class="app-icon">🔤</div>
+        <div class="app-title" id="titleAlphabet">Alfabet</div>
+        <div class="app-desc" id="descAlphabet">Lær bogstaverne med dyr og frugter</div>
+      </a>
+      <a class="app-card" href="rhyme.html">
+        <div class="app-icon">🎵</div>
+        <div class="app-title" id="titleRhyme">Rim</div>
+        <div class="app-desc" id="descRhyme">Find det ord der rimer!</div>
+      </a>
+    </div>
+
+    <div style="display:flex;gap:10px;align-items:center;">
+      <button class="lang-btn active" data-lang="da">🇩🇰</button>
+      <button class="lang-btn" data-lang="bg">🇧🇬</button>
+      <button class="theme-toggle-btn" id="themeToggle" title="Tema">🎨</button>
       <div class="theme-popup" id="themePicker"></div>
     </div>
-  </header>
-
-  <div class="question-card">
-    <div class="letter-display" id="letterDisplay" title="Tryk for at høre bogstavet">A</div>
-    <div class="question-right">
-      <div class="question-text" id="questionText">Hvilken starter med "A"?</div>
-    </div>
-    <button class="hint-btn" id="hintBtn" onclick="playLetter()">🔊<br>Hør</button>
   </div>
-
-  <div class="choices" id="choices"></div>
-
-  <div class="feedback" id="feedback"></div>
-  <div class="alphabet-strip" id="alphabetStrip"></div>
 </div>
 
-<script src="app.js"></script>
+<script>
+  // Stars
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 60; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random() * 100 + 'vw';
+    s.style.top  = Math.random() * 100 + 'vh';
+    s.style.animationDelay = Math.random() * 3 + 's';
+    s.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+    starsEl.appendChild(s);
+  }
+
+  // Themes
+  const THEMES = [
+    { a: '#667eea', b: '#764ba2' },
+    { a: '#f7971e', b: '#e040a0' },
+    { a: '#2193b0', b: '#6dd5ed' },
+    { a: '#11998e', b: '#38ef7d' },
+    { a: '#f953c6', b: '#b91d73' },
+  ];
+
+  function applyTheme(idx) {
+    const t = THEMES[idx];
+    document.body.style.background = `linear-gradient(135deg, ${t.a} 0%, ${t.b} 100%)`;
+    document.querySelectorAll('.theme-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+    localStorage.setItem('theme', idx);
+  }
+
+  const picker = document.getElementById('themePicker');
+  THEMES.forEach((t, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'theme-dot';
+    dot.title = i;
+    dot.style.background = `linear-gradient(135deg, ${t.a}, ${t.b})`;
+    dot.addEventListener('click', () => { applyTheme(i); picker.classList.remove('open'); });
+    picker.appendChild(dot);
+  });
+  applyTheme(parseInt(localStorage.getItem('theme') || '0', 10));
+
+  const themeToggle = document.getElementById('themeToggle');
+  themeToggle.addEventListener('click', () => {
+    const isOpen = picker.classList.contains('open');
+    picker.classList.toggle('open');
+    if (!isOpen) {
+      const rect = themeToggle.getBoundingClientRect();
+      picker.style.top   = (rect.bottom + 8) + 'px';
+      picker.style.right = (window.innerWidth - rect.right) + 'px';
+    }
+  });
+  document.addEventListener('click', e => {
+    if (!themeToggle.contains(e.target) && !picker.contains(e.target))
+      picker.classList.remove('open');
+  });
+
+  // Language
+  const STRINGS = {
+    da: {
+      launcher: '🌟 Alexandras Verden 🌟',
+      titleAlphabet: 'Alfabet',
+      descAlphabet: 'Lær bogstaverne med dyr og frugter',
+      titleRhyme: 'Rim',
+      descRhyme: 'Find det ord der rimer!',
+    },
+    bg: {
+      launcher: '🌟 Светът на Александра 🌟',
+      titleAlphabet: 'Азбука',
+      descAlphabet: 'Научи буквите с животни и плодове',
+      titleRhyme: 'Рими',
+      descRhyme: 'Намери думата, която се римува!',
+    },
+  };
+
+  function setLang(code) {
+    localStorage.setItem('lang', code);
+    document.documentElement.lang = code;
+    const s = STRINGS[code];
+    document.getElementById('launcherTitle').textContent = s.launcher;
+    document.getElementById('titleAlphabet').textContent = s.titleAlphabet;
+    document.getElementById('descAlphabet').textContent  = s.descAlphabet;
+    document.getElementById('titleRhyme').textContent    = s.titleRhyme;
+    document.getElementById('descRhyme').textContent     = s.descRhyme;
+    document.querySelectorAll('.lang-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.lang === code));
+  }
+
+  document.querySelectorAll('.lang-btn').forEach(btn =>
+    btn.addEventListener('click', () => setLang(btn.dataset.lang)));
+
+  setLang(localStorage.getItem('lang') || 'da');
+</script>
 </body>
 </html>

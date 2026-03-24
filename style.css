@@ -330,6 +330,24 @@ header h1 {
 
 .theme-toggle-btn:hover { background: rgba(255,255,255,0.35); }
 
+.back-btn {
+  background: rgba(255,255,255,0.2);
+  border: 2px solid rgba(255,255,255,0.4);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.back-btn:hover { background: rgba(255,255,255,0.35); }
+
 .lang-btn {
   background: rgba(255,255,255,0.15);
   border: 2px solid rgba(255,255,255,0.3);
