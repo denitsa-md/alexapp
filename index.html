@@ -178,6 +178,7 @@
       .hint-btn      { font-size: 0.8rem; padding: 0 12px; }
       .choice-wrapper { gap: 4px; }
       .choice-btn    { gap: 6px; padding: 12px 6px 8px; border-radius: 14px; }
+      .choice-media  { height: 80px; }
       .choice-emoji  { font-size: 2.2rem; }
       .choice-name   { font-size: 0.8rem; }
       .choice-type   { display: none; }
@@ -286,13 +287,14 @@
     }
 
     .choice-media {
-      width: min(120px, 78%);
-      aspect-ratio: 1;
+      width: 100%;
+      height: 110px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
       border-radius: 14px;
+      overflow: hidden;
     }
 
     .choice-media.loading {
