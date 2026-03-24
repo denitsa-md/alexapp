@@ -470,16 +470,56 @@
       z-index: 999;
     }
 
-    .confetti-piece {
-      position: absolute;
-      width: 12px; height: 12px;
-      border-radius: 2px;
-      animation: confettiFall linear forwards;
+    .star-burst-piece {
+      position: fixed;
+      font-size: 1.8rem;
+      pointer-events: none;
+      animation: starBurst linear forwards;
     }
 
-    @keyframes confettiFall {
-      0%   { top: -20px; opacity: 1; }
-      100% { top: 105vh; opacity: 0.3; }
+    @keyframes starBurst {
+      0%   { opacity: 1; transform: translate(0, 0) scale(0.3) rotate(0deg); }
+      60%  { opacity: 1; }
+      100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(1.3) rotate(var(--rot)); }
+    }
+
+    .streak-stars {
+      font-size: 1.3rem;
+      letter-spacing: 1px;
+      color: #ffd200;
+      text-shadow: 0 0 8px rgba(255,210,0,0.8);
+      transition: transform 0.2s;
+    }
+
+    .milestone-overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0;
+    }
+
+    .milestone-overlay.show {
+      animation: milestoneAnim 1.8s ease forwards;
+    }
+
+    .milestone-text {
+      font-size: clamp(2rem, 9vw, 4.5rem);
+      font-weight: 900;
+      color: #ffd200;
+      text-shadow: 0 0 30px #ff9800, 0 0 60px rgba(255,210,0,0.8);
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    @keyframes milestoneAnim {
+      0%   { opacity: 0; transform: scale(0.3); }
+      20%  { opacity: 1; transform: scale(1.1); }
+      70%  { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.05); }
     }
 
   </style>
@@ -488,6 +528,7 @@
 
 <div class="stars" id="stars"></div>
 <div class="confetti-container" id="confetti"></div>
+<div class="milestone-overlay" id="milestone"></div>
 
 <div class="container">
   <header>
@@ -495,6 +536,7 @@
     <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
       <div class="score-bar">
         <div class="score-chip">⭐ <span id="score">0</span> <span id="pointsLabel">point</span></div>
+        <div class="streak-stars" id="streakStars">☆☆☆☆☆</div>
       </div>
       <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
         <button class="lang-btn active" data-lang="da">🇩🇰</button>
@@ -922,12 +964,15 @@
       score += 1 + Math.min(streak, 4);
       streak++;
       document.getElementById('score').textContent = score;
+      updateStreakDisplay();
+      checkMilestone(score);
       speak(item.name);
       showFeedback(true, item.name);
-      launchConfetti();
+      launchStars();
     } else {
       wrapper.classList.add('wrong');
       streak = 0;
+      updateStreakDisplay();
       speak(item.name);
       showFeedback(false, item.name);
       // Reveal correct
@@ -946,25 +991,49 @@
     fb.innerHTML = `<span class="feedback-msg">${msg}</span><button class="next-btn" onclick="newRound()">${LANG.nextBtn}</button>`;
   }
 
-  // --- Confetti ---
-  const COLORS = ['#ff6b6b','#ffd200','#56ab2f','#667eea','#f7971e','#ff9ff3','#54a0ff'];
-  function launchConfetti() {
+  // --- Star burst ---
+  const STAR_COLORS = ['#ffd200','#ffec6e','#fff176','#ff9800','#ffffff','#ffe57f','#ffca28'];
+  function launchStars() {
     const container = document.getElementById('confetti');
     container.innerHTML = '';
-    for (let i = 0; i < 70; i++) {
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+    for (let i = 0; i < 32; i++) {
       const p = document.createElement('div');
-      p.className = 'confetti-piece';
-      p.style.left = Math.random() * 100 + 'vw';
-      p.style.background = COLORS[Math.floor(Math.random() * COLORS.length)];
-      p.style.width = (8 + Math.random() * 10) + 'px';
-      p.style.height = (8 + Math.random() * 10) + 'px';
-      p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-      p.style.transform = `rotate(${Math.random()*360}deg)`;
-      const dur = 1.5 + Math.random() * 1.5;
+      p.className = 'star-burst-piece';
+      const angle = (i / 32) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+      const dist = 120 + Math.random() * 180;
+      p.style.setProperty('--tx', (Math.cos(angle) * dist) + 'px');
+      p.style.setProperty('--ty', (Math.sin(angle) * dist) + 'px');
+      p.style.setProperty('--rot', (Math.random() * 360) + 'deg');
+      p.style.left = cx + 'px';
+      p.style.top  = cy + 'px';
+      p.style.color = STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)];
+      p.textContent = '★';
+      const dur = 0.8 + Math.random() * 0.6;
       p.style.animationDuration = dur + 's';
-      p.style.animationDelay = Math.random() * 0.5 + 's';
+      p.style.animationDelay = (Math.random() * 0.15) + 's';
       container.appendChild(p);
-      setTimeout(() => p.remove(), (dur + 0.6) * 1000);
+      setTimeout(() => p.remove(), (dur + 0.3) * 1000);
+    }
+  }
+
+  // --- Streak display ---
+  function updateStreakDisplay() {
+    const filled = Math.min(streak, 5);
+    document.getElementById('streakStars').textContent =
+      '★'.repeat(filled) + '☆'.repeat(5 - filled);
+  }
+
+  // --- Milestone celebration ---
+  function checkMilestone(newScore) {
+    if (newScore > 0 && newScore % 5 === 0) {
+      const el = document.getElementById('milestone');
+      el.innerHTML = `<div class="milestone-text">⭐ ${newScore} stjerner! ⭐</div>`;
+      el.classList.remove('show');
+      void el.offsetWidth;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 1900);
     }
   }
 
