@@ -334,11 +334,28 @@
 
     .theme-toggle-btn:hover { background: rgba(255,255,255,0.35); }
 
+    .lang-btn {
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50px;
+      width: 36px;
+      height: 36px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .lang-btn.active {
+      background: rgba(255,255,255,0.35);
+      border-color: white;
+    }
+
     .theme-popup {
       display: none;
-      position: absolute;
-      top: calc(100% + 8px);
-      right: 0;
+      position: fixed;
       background: rgba(30,20,60,0.92);
       backdrop-filter: blur(16px);
       border: 2px solid rgba(255,255,255,0.25);
@@ -474,15 +491,17 @@
 
 <div class="container">
   <header>
-    <h1>🌟 Alexandras Alfabet 🌟</h1>
+    <h1 id="appTitle">🌟 Alexandras Alfabet 🌟</h1>
     <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
       <div class="score-bar">
-        <div class="score-chip">⭐ <span id="score">0</span> point</div>
+        <div class="score-chip">⭐ <span id="score">0</span> <span id="pointsLabel">point</span></div>
       </div>
-      <div style="position:relative;">
-        <button class="theme-toggle-btn" id="themeToggle" title="Vælg farvetema">🎨</button>
-        <div class="theme-popup" id="themePicker"></div>
+      <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
+        <button class="lang-btn active" data-lang="da">🇩🇰</button>
+        <button class="lang-btn" data-lang="bg">🇧🇬</button>
       </div>
+      <button class="theme-toggle-btn" id="themeToggle" title="Vælg farvetema">🎨</button>
+      <div class="theme-popup" id="themePicker"></div>
     </div>
   </header>
 
@@ -501,104 +520,240 @@
 </div>
 
 <script>
-  const ITEMS = [
-    // A
-    { name: "Ananas",      emoji: "🍍", wiki: "Pineapple",         letter: "A", type: "frugt" },
-    { name: "Abe",         emoji: "🐒", wiki: "Monkey",            letter: "A", type: "dyr"   },
-    { name: "Alligator",   emoji: "🐊", wiki: "Alligator",         letter: "A", type: "dyr"   },
-    // B
-    { name: "Banan",       emoji: "🍌", wiki: "Banana",            letter: "B", type: "frugt" },
-    { name: "Bjørn",       emoji: "🐻", wiki: "Brown bear",        letter: "B", type: "dyr"   },
-    { name: "Bæver",       emoji: "🦫", wiki: "Beaver",            letter: "B", type: "dyr"   },
-    // C
-    { name: "Citron",      emoji: "🍋", wiki: "Lemon",             letter: "C", type: "frugt" },
-    { name: "Kakadu",      emoji: "🦜", wiki: "Cockatoo",          letter: "C", type: "dyr"   },
-    // D
-    { name: "Dragefrugt",  emoji: "🌺", wiki: "Pitaya",            letter: "D", type: "frugt" },
-    { name: "Due",         emoji: "🕊️", wiki: "Rock dove",         letter: "D", type: "dyr"   },
-    { name: "Delfin",      emoji: "🐬", wiki: "Dolphin",           letter: "D", type: "dyr"   },
-    // E
-    { name: "Elefant",     emoji: "🐘", wiki: "Asian elephant",    letter: "E", type: "dyr"   },
-    { name: "Egern",       emoji: "🐿️", wiki: "Squirrel",          letter: "E", type: "dyr"   },
-    // F
-    { name: "Fersken",     emoji: "🍑", wiki: "Peach",             letter: "F", type: "frugt" },
-    { name: "Flamingo",    emoji: "🦩", wiki: "Flamingo",          letter: "F", type: "dyr"   },
-    { name: "Frø",         emoji: "🐸", wiki: "Frog",              letter: "F", type: "dyr"   },
-    // G
-    { name: "Guava",       emoji: "🍈", wiki: "Guava",             letter: "G", type: "frugt" },
-    { name: "Gepard",      emoji: "🐆", wiki: "Cheetah",           letter: "G", type: "dyr"   },
-    { name: "Gorilla",     emoji: "🦍", wiki: "Gorilla",           letter: "G", type: "dyr"   },
-    { name: "Giraf",       emoji: "🦒", wiki: "Giraffe",           letter: "G", type: "dyr"   },
-    // H
-    { name: "Haj",         emoji: "🦈", wiki: "Shark",             letter: "H", type: "dyr"   },
-    { name: "Hjort",       emoji: "🦌", wiki: "Deer",              letter: "H", type: "dyr"   },
-    { name: "Humlebi",     emoji: "🐝", wiki: "Bumblebee",         letter: "H", type: "dyr"   },
-    // I
-    { name: "Iguana",      emoji: "🦎", wiki: "Green iguana",      letter: "I", type: "dyr"   },
-    // J
-    { name: "Jackfrugt",   emoji: "🥭", wiki: "Jackfruit",         letter: "J", type: "frugt" },
-    { name: "Jaguar",      emoji: "🐆", wiki: "Jaguar",            letter: "J", type: "dyr"   },
-    // K
-    { name: "Kiwi",        emoji: "🥝", wiki: "Kiwifruit",         letter: "K", type: "frugt" },
-    { name: "Koala",       emoji: "🐨", wiki: "Koala",             letter: "K", type: "dyr"   },
-    { name: "Kamel",       emoji: "🐪", wiki: "Camel",             letter: "K", type: "dyr"   },
-    { name: "Krokodille",  emoji: "🐊", wiki: "Crocodile",         letter: "K", type: "dyr"   },
-    // L
-    { name: "Litchi",      emoji: "🍒", wiki: "Lychee",            letter: "L", type: "frugt" },
-    { name: "Løve",        emoji: "🦁", wiki: "Lion",              letter: "L", type: "dyr"   },
-    { name: "Lama",        emoji: "🦙", wiki: "Llama",             letter: "L", type: "dyr"   },
-    // M
-    { name: "Mango",       emoji: "🥭", wiki: "Mango",             letter: "M", type: "frugt" },
-    { name: "Mangostan",   emoji: "🫐", wiki: "Mangosteen",        letter: "M", type: "frugt" },
-    { name: "Mus",         emoji: "🐭", wiki: "House mouse",       letter: "M", type: "dyr"   },
-    // N
-    { name: "Næsehorn",    emoji: "🦏", wiki: "Rhinoceros",        letter: "N", type: "dyr"   },
-    // O
-    { name: "Orange",      emoji: "🍊", wiki: "Orange (fruit)",    letter: "O", type: "frugt" },
-    { name: "Orangutan",   emoji: "🦧", wiki: "Orangutan",         letter: "O", type: "dyr"   },
-    { name: "Odder",       emoji: "🦦", wiki: "Otter",             letter: "O", type: "dyr"   },
-    // P
-    { name: "Papaya",      emoji: "🍈", wiki: "Papaya",            letter: "P", type: "frugt" },
-    { name: "Panda",       emoji: "🐼", wiki: "Giant panda",       letter: "P", type: "dyr"   },
-    { name: "Pingvin",     emoji: "🐧", wiki: "Penguin",           letter: "P", type: "dyr"   },
-    { name: "Papegøje",    emoji: "🦜", wiki: "Parrot",            letter: "P", type: "dyr"   },
-    // R
-    { name: "Rambutan",    emoji: "🍓", wiki: "Rambutan",          letter: "R", type: "frugt" },
-    { name: "Reje",        emoji: "🦐", wiki: "Shrimp",            letter: "R", type: "dyr"   },
-    { name: "Ræv",         emoji: "🦊", wiki: "Red fox",           letter: "R", type: "dyr"   },
-    // S
-    { name: "Stjernefrugt",emoji: "🌟", wiki: "Carambola",         letter: "S", type: "frugt" },
-    { name: "Slange",      emoji: "🐍", wiki: "Snake",             letter: "S", type: "dyr"   },
-    { name: "Sæl",         emoji: "🦭", wiki: "Pinniped",          letter: "S", type: "dyr"   },
-    { name: "Sommerfugl",  emoji: "🦋", wiki: "Butterfly",         letter: "S", type: "dyr"   },
-    // T
-    { name: "Tiger",       emoji: "🐯", wiki: "Tiger",             letter: "T", type: "dyr"   },
-    { name: "Tapir",       emoji: "🐗", wiki: "Tapir",             letter: "T", type: "dyr"   },
-    { name: "Tudse",       emoji: "🐸", wiki: "Toad",              letter: "T", type: "dyr"   },
-    // U
-    { name: "Ugle",        emoji: "🦉", wiki: "Owl",               letter: "U", type: "dyr"   },
-    // V
-    { name: "Vandmelon",   emoji: "🍉", wiki: "Watermelon",        letter: "V", type: "frugt" },
-    { name: "Varan",       emoji: "🦎", wiki: "Monitor lizard",    letter: "V", type: "dyr"   },
-    // Y
-    { name: "Yak",         emoji: "🐂", wiki: "Yak",               letter: "Y", type: "dyr"   },
-    // Z
-    { name: "Zebra",       emoji: "🦓", wiki: "Zebra",             letter: "Z", type: "dyr"   },
-    // Æ
-    { name: "Æble",        emoji: "🍎", wiki: "Apple",             letter: "Æ", type: "frugt" },
-    { name: "Æsel",        emoji: "🫏", wiki: "Donkey",            letter: "Æ", type: "dyr"   },
-    // Ø
-    { name: "Ørn",         emoji: "🦅", wiki: "Eagle",             letter: "Ø", type: "dyr"   },
-    // Å
-    { name: "Ål",          emoji: "🐟", wiki: "Eel",               letter: "Å", type: "dyr"   },
-  ];
+  const LANGS = {
+    da: {
+      code: 'da',
+      tts: 'da-DK',
+      flag: '🇩🇰',
+      title: '🌟 Alexandras Alfabet 🌟',
+      questionPrefix: 'Hvilken starter med',
+      hearBtn: '🔊 Hør',
+      nextBtn: 'Næste ➡️',
+      pointsLabel: 'point',
+      alphabet: ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','Æ','Ø','Å'],
+      correct: [
+        "🎉 Fantastisk! Du er så klog!",
+        "🌟 Rigtigt! Du er en stjerne!",
+        "🎊 WOW! Perfekt svar!",
+        "🦄 Ja ja ja! Godt klaret!",
+        "✨ Bravo Alexandra!",
+        "🎈 Hurra! Det er rigtigt!",
+      ],
+      wrong: [
+        "😊 Næsten! Prøv igen næste gang!",
+        "💪 Ikke helt – men du lærer det!",
+        "🌈 Øv, men godt forsøgt!",
+        "🐣 Ikke rigtigt, men du er modig!",
+      ],
+      items: [
+        // A
+        { name: "Ananas",      emoji: "🍍", wiki: "Pineapple",         letter: "A", type: "frugt" },
+        { name: "Abe",         emoji: "🐒", wiki: "Monkey",            letter: "A", type: "dyr"   },
+        { name: "Alligator",   emoji: "🐊", wiki: "Alligator",         letter: "A", type: "dyr"   },
+        // B
+        { name: "Banan",       emoji: "🍌", wiki: "Banana",            letter: "B", type: "frugt" },
+        { name: "Bjørn",       emoji: "🐻", wiki: "Brown bear",        letter: "B", type: "dyr"   },
+        { name: "Bæver",       emoji: "🦫", wiki: "Beaver",            letter: "B", type: "dyr"   },
+        // C
+        { name: "Citron",      emoji: "🍋", wiki: "Lemon",             letter: "C", type: "frugt" },
+        { name: "Kakadu",      emoji: "🦜", wiki: "Cockatoo",          letter: "C", type: "dyr"   },
+        // D
+        { name: "Dragefrugt",  emoji: "🌺", wiki: "Pitaya",            letter: "D", type: "frugt" },
+        { name: "Due",         emoji: "🕊️", wiki: "Rock dove",         letter: "D", type: "dyr"   },
+        { name: "Delfin",      emoji: "🐬", wiki: "Dolphin",           letter: "D", type: "dyr"   },
+        // E
+        { name: "Elefant",     emoji: "🐘", wiki: "Asian elephant",    letter: "E", type: "dyr"   },
+        { name: "Egern",       emoji: "🐿️", wiki: "Squirrel",          letter: "E", type: "dyr"   },
+        // F
+        { name: "Fersken",     emoji: "🍑", wiki: "Peach",             letter: "F", type: "frugt" },
+        { name: "Flamingo",    emoji: "🦩", wiki: "Flamingo",          letter: "F", type: "dyr"   },
+        { name: "Frø",         emoji: "🐸", wiki: "Frog",              letter: "F", type: "dyr"   },
+        // G
+        { name: "Guava",       emoji: "🍈", wiki: "Guava",             letter: "G", type: "frugt" },
+        { name: "Gepard",      emoji: "🐆", wiki: "Cheetah",           letter: "G", type: "dyr"   },
+        { name: "Gorilla",     emoji: "🦍", wiki: "Gorilla",           letter: "G", type: "dyr"   },
+        { name: "Giraf",       emoji: "🦒", wiki: "Giraffe",           letter: "G", type: "dyr"   },
+        // H
+        { name: "Haj",         emoji: "🦈", wiki: "Shark",             letter: "H", type: "dyr"   },
+        { name: "Hjort",       emoji: "🦌", wiki: "Deer",              letter: "H", type: "dyr"   },
+        { name: "Humlebi",     emoji: "🐝", wiki: "Bumblebee",         letter: "H", type: "dyr"   },
+        // I
+        { name: "Iguana",      emoji: "🦎", wiki: "Green iguana",      letter: "I", type: "dyr"   },
+        // J
+        { name: "Jackfrugt",   emoji: "🥭", wiki: "Jackfruit",         letter: "J", type: "frugt" },
+        { name: "Jaguar",      emoji: "🐆", wiki: "Jaguar",            letter: "J", type: "dyr"   },
+        // K
+        { name: "Kiwi",        emoji: "🥝", wiki: "Kiwifruit",         letter: "K", type: "frugt" },
+        { name: "Koala",       emoji: "🐨", wiki: "Koala",             letter: "K", type: "dyr"   },
+        { name: "Kamel",       emoji: "🐪", wiki: "Camel",             letter: "K", type: "dyr"   },
+        { name: "Krokodille",  emoji: "🐊", wiki: "Crocodile",         letter: "K", type: "dyr"   },
+        // L
+        { name: "Litchi",      emoji: "🍒", wiki: "Lychee",            letter: "L", type: "frugt" },
+        { name: "Løve",        emoji: "🦁", wiki: "Lion",              letter: "L", type: "dyr"   },
+        { name: "Lama",        emoji: "🦙", wiki: "Llama",             letter: "L", type: "dyr"   },
+        // M
+        { name: "Mango",       emoji: "🥭", wiki: "Mango",             letter: "M", type: "frugt" },
+        { name: "Mangostan",   emoji: "🫐", wiki: "Mangosteen",        letter: "M", type: "frugt" },
+        { name: "Mus",         emoji: "🐭", wiki: "House mouse",       letter: "M", type: "dyr"   },
+        // N
+        { name: "Næsehorn",    emoji: "🦏", wiki: "Rhinoceros",        letter: "N", type: "dyr"   },
+        // O
+        { name: "Orange",      emoji: "🍊", wiki: "Orange (fruit)",    letter: "O", type: "frugt" },
+        { name: "Orangutan",   emoji: "🦧", wiki: "Orangutan",         letter: "O", type: "dyr"   },
+        { name: "Odder",       emoji: "🦦", wiki: "Otter",             letter: "O", type: "dyr"   },
+        // P
+        { name: "Papaya",      emoji: "🍈", wiki: "Papaya",            letter: "P", type: "frugt" },
+        { name: "Panda",       emoji: "🐼", wiki: "Giant panda",       letter: "P", type: "dyr"   },
+        { name: "Pingvin",     emoji: "🐧", wiki: "Penguin",           letter: "P", type: "dyr"   },
+        { name: "Papegøje",    emoji: "🦜", wiki: "Parrot",            letter: "P", type: "dyr"   },
+        // R
+        { name: "Rambutan",    emoji: "🍓", wiki: "Rambutan",          letter: "R", type: "frugt" },
+        { name: "Reje",        emoji: "🦐", wiki: "Shrimp",            letter: "R", type: "dyr"   },
+        { name: "Ræv",         emoji: "🦊", wiki: "Red fox",           letter: "R", type: "dyr"   },
+        // S
+        { name: "Stjernefrugt",emoji: "🌟", wiki: "Carambola",         letter: "S", type: "frugt" },
+        { name: "Slange",      emoji: "🐍", wiki: "Snake",             letter: "S", type: "dyr"   },
+        { name: "Sæl",         emoji: "🦭", wiki: "Pinniped",          letter: "S", type: "dyr"   },
+        { name: "Sommerfugl",  emoji: "🦋", wiki: "Butterfly",         letter: "S", type: "dyr"   },
+        // T
+        { name: "Tiger",       emoji: "🐯", wiki: "Tiger",             letter: "T", type: "dyr"   },
+        { name: "Tapir",       emoji: "🐗", wiki: "Tapir",             letter: "T", type: "dyr"   },
+        { name: "Tudse",       emoji: "🐸", wiki: "Toad",              letter: "T", type: "dyr"   },
+        // U
+        { name: "Ugle",        emoji: "🦉", wiki: "Owl",               letter: "U", type: "dyr"   },
+        // V
+        { name: "Vandmelon",   emoji: "🍉", wiki: "Watermelon",        letter: "V", type: "frugt" },
+        { name: "Varan",       emoji: "🦎", wiki: "Monitor lizard",    letter: "V", type: "dyr"   },
+        // Y
+        { name: "Yak",         emoji: "🐂", wiki: "Yak",               letter: "Y", type: "dyr"   },
+        // Z
+        { name: "Zebra",       emoji: "🦓", wiki: "Zebra",             letter: "Z", type: "dyr"   },
+        // Æ
+        { name: "Æble",        emoji: "🍎", wiki: "Apple",             letter: "Æ", type: "frugt" },
+        { name: "Æsel",        emoji: "🫏", wiki: "Donkey",            letter: "Æ", type: "dyr"   },
+        // Ø
+        { name: "Ørn",         emoji: "🦅", wiki: "Eagle",             letter: "Ø", type: "dyr"   },
+        // Å
+        { name: "Ål",          emoji: "🐟", wiki: "Eel",               letter: "Å", type: "dyr"   },
+      ]
+    },
+    bg: {
+      code: 'bg',
+      tts: 'bg-BG',
+      flag: '🇧🇬',
+      title: '🌟 Азбуката на Александра 🌟',
+      questionPrefix: 'Кое започва с',
+      hearBtn: '🔊 Чуй',
+      nextBtn: 'Напред ➡️',
+      pointsLabel: 'точки',
+      alphabet: ['А','Б','В','Г','Д','Е','Ж','З','И','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ю','Я'],
+      correct: [
+        "🎉 Браво! Ти си толкова умна!",
+        "🌟 Вярно! Ти си звезда!",
+        "🎊 УАУ! Перфектен отговор!",
+        "🦄 Да да да! Страхотно!",
+        "✨ Браво Александра!",
+        "🎈 Ура! Правилно е!",
+      ],
+      wrong: [
+        "😊 Почти! Опитай пак следващия път!",
+        "💪 Не съвсем – но се учиш!",
+        "🌈 Ох, но добър опит!",
+        "🐣 Не е правилно, но си смела!",
+      ],
+      items: [
+        // А
+        { name: "Ананас",    emoji: "🍍", wiki: "Pineapple",       letter: "А", type: "плод"    },
+        { name: "Авокадо",   emoji: "🥑", wiki: "Avocado",         letter: "А", type: "плод"    },
+        { name: "Алигатор",  emoji: "🐊", wiki: "Alligator",       letter: "А", type: "животно" },
+        // Б
+        { name: "Банан",     emoji: "🍌", wiki: "Banana",          letter: "Б", type: "плод"    },
+        { name: "Бобър",     emoji: "🦫", wiki: "Beaver",          letter: "Б", type: "животно" },
+        { name: "Бизон",     emoji: "🦬", wiki: "American bison",  letter: "Б", type: "животно" },
+        // В
+        { name: "Вълк",      emoji: "🐺", wiki: "Gray wolf",       letter: "В", type: "животно" },
+        { name: "Видра",     emoji: "🦦", wiki: "Otter",           letter: "В", type: "животно" },
+        // Г
+        { name: "Горила",    emoji: "🦍", wiki: "Gorilla",         letter: "Г", type: "животно" },
+        { name: "Гепард",    emoji: "🐆", wiki: "Cheetah",         letter: "Г", type: "животно" },
+        { name: "Гущер",     emoji: "🦎", wiki: "Lizard",          letter: "Г", type: "животно" },
+        // Д
+        { name: "Делфин",    emoji: "🐬", wiki: "Dolphin",         letter: "Д", type: "животно" },
+        { name: "Диня",      emoji: "🍉", wiki: "Watermelon",      letter: "Д", type: "плод"    },
+        // Е
+        { name: "Елен",      emoji: "🦌", wiki: "Deer",            letter: "Е", type: "животно" },
+        { name: "Ехидна",    emoji: "🦔", wiki: "Echidna",         letter: "Е", type: "животно" },
+        // Ж
+        { name: "Жираф",     emoji: "🦒", wiki: "Giraffe",         letter: "Ж", type: "животно" },
+        { name: "Жаба",      emoji: "🐸", wiki: "Frog",            letter: "Ж", type: "животно" },
+        // З
+        { name: "Зебра",     emoji: "🦓", wiki: "Zebra",           letter: "З", type: "животно" },
+        { name: "Заек",      emoji: "🐰", wiki: "Rabbit",          letter: "З", type: "животно" },
+        // И
+        { name: "Игуана",    emoji: "🦎", wiki: "Green iguana",    letter: "И", type: "животно" },
+        // К
+        { name: "Кенгуру",   emoji: "🦘", wiki: "Kangaroo",        letter: "К", type: "животно" },
+        { name: "Кокос",     emoji: "🥥", wiki: "Coconut",         letter: "К", type: "плод"    },
+        { name: "Крокодил",  emoji: "🐊", wiki: "Crocodile",       letter: "К", type: "животно" },
+        { name: "Кобра",     emoji: "🐍", wiki: "Cobra",           letter: "К", type: "животно" },
+        // Л
+        { name: "Лъв",       emoji: "🦁", wiki: "Lion",            letter: "Л", type: "животно" },
+        { name: "Лимон",     emoji: "🍋", wiki: "Lemon",           letter: "Л", type: "плод"    },
+        { name: "Лисица",    emoji: "🦊", wiki: "Red fox",         letter: "Л", type: "животно" },
+        // М
+        { name: "Маймуна",   emoji: "🐒", wiki: "Monkey",          letter: "М", type: "животно" },
+        { name: "Манго",     emoji: "🥭", wiki: "Mango",           letter: "М", type: "плод"    },
+        { name: "Мечка",     emoji: "🐻", wiki: "Brown bear",      letter: "М", type: "животно" },
+        // Н
+        { name: "Носорог",   emoji: "🦏", wiki: "Rhinoceros",      letter: "Н", type: "животно" },
+        { name: "Нарвал",    emoji: "🐳", wiki: "Narwhal",         letter: "Н", type: "животно" },
+        // О
+        { name: "Орел",      emoji: "🦅", wiki: "Golden eagle",    letter: "О", type: "животно" },
+        { name: "Орангутан", emoji: "🦧", wiki: "Orangutan",       letter: "О", type: "животно" },
+        // П
+        { name: "Папагал",   emoji: "🦜", wiki: "Parrot",          letter: "П", type: "животно" },
+        { name: "Папая",     emoji: "🍈", wiki: "Papaya",          letter: "П", type: "плод"    },
+        { name: "Пингвин",   emoji: "🐧", wiki: "Penguin",         letter: "П", type: "животно" },
+        // Р
+        { name: "Рак",       emoji: "🦀", wiki: "Crab",            letter: "Р", type: "животно" },
+        { name: "Рис",       emoji: "🐱", wiki: "Lynx",            letter: "Р", type: "животно" },
+        // С
+        { name: "Слон",      emoji: "🐘", wiki: "Asian elephant",  letter: "С", type: "животно" },
+        { name: "Сова",      emoji: "🦉", wiki: "Owl",             letter: "С", type: "животно" },
+        { name: "Слива",     emoji: "🍑", wiki: "Plum",            letter: "С", type: "плод"    },
+        // Т
+        { name: "Тигър",     emoji: "🐯", wiki: "Tiger",           letter: "Т", type: "животно" },
+        { name: "Тапир",     emoji: "🐗", wiki: "Tapir",           letter: "Т", type: "животно" },
+        // У
+        { name: "Удав",      emoji: "🐍", wiki: "Boa constrictor", letter: "У", type: "животно" },
+        // Ф
+        { name: "Фламинго",  emoji: "🦩", wiki: "Flamingo",        letter: "Ф", type: "животно" },
+        { name: "Фурма",     emoji: "🌴", wiki: "Date palm",       letter: "Ф", type: "плод"    },
+        // Х
+        { name: "Хипопотам", emoji: "🦛", wiki: "Hippopotamus",    letter: "Х", type: "животно" },
+        { name: "Хамелеон",  emoji: "🦎", wiki: "Chameleon",       letter: "Х", type: "животно" },
+        // Ц
+        { name: "Цикада",    emoji: "🦗", wiki: "Cicada",          letter: "Ц", type: "животно" },
+        // Ч
+        { name: "Чакал",     emoji: "🐺", wiki: "Jackal",          letter: "Ч", type: "животно" },
+        { name: "Череша",    emoji: "🍒", wiki: "Cherry",          letter: "Ч", type: "плод"    },
+        // Ш
+        { name: "Шимпанзе",  emoji: "🐒", wiki: "Chimpanzee",      letter: "Ш", type: "животно" },
+        { name: "Шипка",     emoji: "🌹", wiki: "Rose hip",        letter: "Ш", type: "плод"    },
+        // Щ
+        { name: "Щраус",     emoji: "🦤", wiki: "Ostrich",         letter: "Щ", type: "животно" },
+        { name: "Щъркел",    emoji: "🐦", wiki: "White stork",     letter: "Щ", type: "животно" },
+        // Ю
+        { name: "Юзу",       emoji: "🍊", wiki: "Yuzu",            letter: "Ю", type: "плод"    },
+        // Я
+        { name: "Ягода",     emoji: "🍓", wiki: "Strawberry",      letter: "Я", type: "плод"    },
+        { name: "Ягуар",     emoji: "🐆", wiki: "Jaguar",          letter: "Я", type: "животно" },
+      ]
+    }
+  };
 
-  // Only keep letters that have at least 2 items (so we can always fill 3 choices)
-  const allLetters = [...new Set(ITEMS.map(i => i.letter))];
-  const LETTERS = allLetters.filter(l => ITEMS.filter(i => i.letter === l).length >= 1);
-
-  // Danish alphabet order
-  const DA_ALPHA = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','Æ','Ø','Å'];
+  let LANG = LANGS[localStorage.getItem('lang') || 'da'];
+  let LETTERS = [...new Set(LANG.items.map(i => i.letter))];
 
   let score = 0;
   let streak = 0;
@@ -620,11 +775,11 @@
   }
 
   // --- Speech ---
-  function speak(text, lang = 'da-DK') {
+  function speak(text) {
     if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = lang;
+    u.lang = LANG.tts;
     u.rate = 0.85;
     u.pitch = 1.1;
     window.speechSynthesis.speak(u);
@@ -638,22 +793,7 @@
   function renderStrip() {
     const strip = document.getElementById('alphabetStrip');
     strip.innerHTML = '';
-    DA_ALPHA.forEach(l => {
-      if (!LETTERS.includes(l)) return;
-      const chip = document.createElement('div');
-      chip.className = 'alpha-chip' +
-        (usedLetters.has(l) ? ' done' : '') +
-        (l === currentLetter ? ' current' : '');
-      chip.textContent = l;
-      strip.appendChild(chip);
-    });
-  }
-
-  // --- Alphabet strip ---
-  function renderStrip() {
-    const strip = document.getElementById('alphabetStrip');
-    strip.innerHTML = '';
-    DA_ALPHA.forEach(l => {
+    LANG.alphabet.forEach(l => {
       if (!LETTERS.includes(l)) return;
       const chip = document.createElement('div');
       chip.className = 'alpha-chip' +
@@ -689,18 +829,18 @@
     currentLetter = pickLetter();
     usedLetters.add(currentLetter);
 
-    const correct = shuffle(ITEMS.filter(i => i.letter === currentLetter))[0];
+    const correct = shuffle(LANG.items.filter(i => i.letter === currentLetter))[0];
     currentCorrect = correct;
 
     // Pick 2 distractors with different letters
-    const distractorPool = shuffle(ITEMS.filter(i => i.letter !== currentLetter));
+    const distractorPool = shuffle(LANG.items.filter(i => i.letter !== currentLetter));
     const distractors = distractorPool.slice(0, 2);
 
     const choices = shuffle([correct, ...distractors]);
 
     document.getElementById('letterDisplay').textContent = currentLetter;
     document.getElementById('questionText').textContent =
-      `Hvilken starter med "${currentLetter}"?`;
+      `${LANG.questionPrefix} "${currentLetter}"?`;
 
     renderChoices(choices);
     renderStrip();
@@ -743,7 +883,7 @@
 
       const soundBtn = document.createElement('button');
       soundBtn.className = 'sound-btn';
-      soundBtn.textContent = '🔊 Hør';
+      soundBtn.textContent = LANG.hearBtn;
       soundBtn.addEventListener('click', () => speak(item.name));
 
       wrapper.appendChild(btn);
@@ -799,27 +939,11 @@
     }
   }
 
-  const CORRECT_MSGS = [
-    "🎉 Fantastisk! Du er så klog!",
-    "🌟 Rigtigt! Du er en stjerne!",
-    "🎊 WOW! Perfekt svar!",
-    "🦄 Ja ja ja! Godt klaret!",
-    "✨ Bravo Alexandra!",
-    "🎈 Hurra! Det er rigtigt!",
-  ];
-
-  const WRONG_MSGS = [
-    "😊 Næsten! Prøv igen næste gang!",
-    "💪 Ikke helt – men du lærer det!",
-    "🌈 Øv, men godt forsøgt!",
-    "🐣 Ikke rigtigt, men du er modig!",
-  ];
-
   function showFeedback(correct, name) {
-    const msgs = correct ? CORRECT_MSGS : WRONG_MSGS;
+    const msgs = correct ? LANG.correct : LANG.wrong;
     const msg = msgs[Math.floor(Math.random() * msgs.length)];
     const fb = document.getElementById('feedback');
-    fb.innerHTML = `<span class="feedback-msg">${msg}</span><button class="next-btn" onclick="newRound()">Næste ➡️</button>`;
+    fb.innerHTML = `<span class="feedback-msg">${msg}</span><button class="next-btn" onclick="newRound()">${LANG.nextBtn}</button>`;
   }
 
   // --- Confetti ---
@@ -881,11 +1005,47 @@
   // Theme popup toggle
   const themeToggle = document.getElementById('themeToggle');
   const themePopup  = document.getElementById('themePicker');
-  themeToggle.addEventListener('click', e => {
-    e.stopPropagation();
+  themeToggle.addEventListener('click', () => {
+    const isOpen = themePopup.classList.contains('open');
     themePopup.classList.toggle('open');
+    if (!isOpen) {
+      const rect = themeToggle.getBoundingClientRect();
+      themePopup.style.top   = (rect.bottom + 8) + 'px';
+      themePopup.style.right = (window.innerWidth - rect.right) + 'px';
+    }
   });
-  document.addEventListener('click', () => themePopup.classList.remove('open'));
+  document.addEventListener('click', e => {
+    if (!themeToggle.contains(e.target) && !themePopup.contains(e.target))
+      themePopup.classList.remove('open');
+  });
+
+  // --- Language switcher ---
+  function setLanguage(code) {
+    LANG = LANGS[code];
+    LETTERS = [...new Set(LANG.items.map(i => i.letter))];
+    localStorage.setItem('lang', code);
+    document.documentElement.lang = code;
+    document.getElementById('appTitle').textContent = LANG.title;
+    document.getElementById('pointsLabel').textContent = LANG.pointsLabel;
+    document.querySelectorAll('.lang-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.lang === code));
+    usedLetters = new Set();
+    score = 0; streak = 0;
+    document.getElementById('score').textContent = 0;
+    newRound();
+  }
+
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+  });
+
+  // Apply saved language on load (sync UI without resetting score)
+  const savedLang = localStorage.getItem('lang') || 'da';
+  document.documentElement.lang = savedLang;
+  document.getElementById('appTitle').textContent = LANG.title;
+  document.getElementById('pointsLabel').textContent = LANG.pointsLabel;
+  document.querySelectorAll('.lang-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.lang === savedLang));
 
   // Register service worker for network-first cache busting
   if ('serviceWorker' in navigator) {
