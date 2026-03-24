@@ -175,6 +175,7 @@
       .letter-display { font-size: 4rem; }
       .question-text { font-size: 0.85rem; }
       .hint-btn      { font-size: 0.8rem; padding: 0 12px; }
+      .choice-wrapper { gap: 4px; }
       .choice-btn    { gap: 6px; padding: 12px 6px 8px; border-radius: 14px; }
       .choice-emoji  { font-size: 2.2rem; }
       .choice-name   { font-size: 0.8rem; }
@@ -202,24 +203,30 @@
       width: 100%;
     }
 
-    .choice-btn:hover {
+    .choice-btn:not(:disabled):hover {
       transform: translateY(-6px) scale(1.03);
       box-shadow: 0 16px 32px rgba(0,0,0,0.2);
     }
 
-    .choice-btn:active { transform: scale(0.96); }
+    .choice-btn:not(:disabled):active { transform: scale(0.96); }
 
-    .choice-btn.correct {
+    .choice-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .choice-wrapper.correct .choice-btn {
       background: linear-gradient(135deg, #56ab2f, #a8e063);
       animation: pop 0.4s ease;
     }
 
-    .choice-btn.wrong {
+    .choice-wrapper.wrong .choice-btn {
       background: linear-gradient(135deg, #ff6b6b, #ffa07a);
       animation: shake 0.4s ease;
     }
 
-    .choice-btn.disabled { pointer-events: none; }
+    .choice-btn:disabled { pointer-events: none; }
 
     @keyframes pop {
       0%   { transform: scale(1); }
@@ -268,8 +275,8 @@
 
     .sound-btn:active { background: rgba(102,126,234,0.25); }
 
-    .choice-btn.correct .sound-btn { color: #2d6a0f; background: rgba(255,255,255,0.3); }
-    .choice-btn.wrong   .sound-btn { color: #7a1a1a; background: rgba(255,255,255,0.3); }
+    .choice-wrapper.correct .sound-btn { color: #2d6a0f; background: rgba(56,171,47,0.15); }
+    .choice-wrapper.wrong   .sound-btn { color: #7a1a1a; background: rgba(255,107,107,0.15); }
 
     .first-letter {
       color: #f7971e;
@@ -691,20 +698,26 @@
     const container = document.getElementById('choices');
     container.innerHTML = '';
     choices.forEach(item => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'choice-wrapper';
+
       const btn = document.createElement('button');
       btn.className = 'choice-btn';
       const highlightedName = `<span class="first-letter">${item.name[0]}</span>${item.name.slice(1)}`;
       btn.innerHTML = `
         <div class="choice-media loading"></div>
         <span class="choice-name">${highlightedName}</span>
-        <button class="sound-btn" title="Hør ordet">🔊 Hør</button>
       `;
-      btn.querySelector('.sound-btn').addEventListener('click', e => {
-        e.stopPropagation();
-        speak(item.name);
-      });
-      btn.addEventListener('click', () => handleAnswer(btn, item));
-      container.appendChild(btn);
+      btn.addEventListener('click', () => handleAnswer(wrapper, btn, item));
+
+      const soundBtn = document.createElement('button');
+      soundBtn.className = 'sound-btn';
+      soundBtn.textContent = '🔊 Hør';
+      soundBtn.addEventListener('click', () => speak(item.name));
+
+      wrapper.appendChild(btn);
+      wrapper.appendChild(soundBtn);
+      container.appendChild(wrapper);
 
       fetchWikiImage(item.wiki).then(src => {
         const media = btn.querySelector('.choice-media');
@@ -725,16 +738,16 @@
   }
 
   // --- Handle answer ---
-  function handleAnswer(btn, item) {
+  function handleAnswer(wrapper, btn, item) {
     if (answered) return;
     answered = true;
 
     const isCorrect = item.letter === currentLetter;
     const allBtns = document.querySelectorAll('.choice-btn');
-    allBtns.forEach(b => b.classList.add('disabled'));
+    allBtns.forEach(b => { b.disabled = true; });
 
     if (isCorrect) {
-      btn.classList.add('correct');
+      wrapper.classList.add('correct');
       score += 1 + Math.min(streak, 4);
       streak++;
       document.getElementById('score').textContent = score;
@@ -742,15 +755,14 @@
       showFeedback(true, item.name);
       launchConfetti();
     } else {
-      btn.classList.add('wrong');
+      wrapper.classList.add('wrong');
       streak = 0;
       speak(item.name);
       showFeedback(false, item.name);
       // Reveal correct
-      allBtns.forEach(b => {
-        const nameEl = b.querySelector('.choice-name');
-        if (nameEl && nameEl.textContent === currentCorrect.name) {
-          b.classList.add('correct');
+      document.querySelectorAll('.choice-wrapper').forEach(w => {
+        if (w.querySelector('.choice-name').textContent === currentCorrect.name) {
+          w.classList.add('correct');
         }
       });
     }
